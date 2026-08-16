@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { faker } from '@faker-js/faker';
 import './styles.css';
+import withToggles from './HOC';
 
 const products = Array.from({ length: 20 }, () => {
   return {
@@ -71,6 +72,20 @@ function List({ title, items, render }) {
   );
 }
 
+// Допустим, мы получили этот компонент из сторонней библиотеки и не можем его изменить.
+// Но мы все еще хотим добавить к нему две функции переключения.
+function ProductList({ title, items }) {
+  return (
+    <ul className="list">
+      {items.map(product => (
+        <ProductItem key={product.productName} product={product} />
+      ))}
+    </ul>
+  );
+}
+
+const ProductListWithToggles = withToggles(ProductList);
+
 export default function App() {
   return (
     <div>
@@ -90,18 +105,10 @@ export default function App() {
           )}
         />
       </div>
-    </div>
-  );
-}
 
-// ПОЗЖЕ: Допустим, мы получили этот компонент из сторонней библиотеки и не можем его изменить.
-// Но мы все еще хотим добавить к нему две функции переключения.
-function ProductList({ title, items }) {
-  return (
-    <ul className="list">
-      {items.map(product => (
-        <ProductItem key={product.productName} product={product} />
-      ))}
-    </ul>
+      <div className="col-2">
+        <ProductListWithToggles title="Products HOC" items={products} />
+      </div>
+    </div>
   );
 }
